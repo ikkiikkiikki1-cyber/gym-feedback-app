@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai'
 export const maxDuration = 60
 
 // --- 1日の利用回数制限 ---
-const DAILY_LIMIT = 20
+const DAILY_LIMIT = 30
 const usageStore = { date: '', count: 0 }
 
 function checkAndIncrementUsage() {
