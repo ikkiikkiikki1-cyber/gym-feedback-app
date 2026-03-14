@@ -42,7 +42,7 @@ export async function POST(request) {
 
     // Gemini API 呼び出し
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY)
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' })
 
     const prompt = `この体組成計（TANITA等）の測定結果画像からデータを読み取り、以下のJSON形式のみで返してください。読み取れない項目はnullにしてください。説明文や\`\`\`は一切不要です。
 
