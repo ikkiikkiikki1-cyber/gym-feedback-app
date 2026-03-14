@@ -1,4 +1,5 @@
 'use client'
+const SITE_PASSWORD = '0205'
 import { useState, useRef } from 'react'
 
 export default function Home() {
@@ -8,6 +9,8 @@ export default function Home() {
   const [preview, setPreview] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [authed, setAuthed] = useState(false)
+const [pwInput, setPwInput] = useState('')
   const [resultHtml, setResultHtml] = useState(null)
   const [remaining, setRemaining] = useState(null)
   const fileRef = useRef(null)
@@ -68,6 +71,17 @@ export default function Home() {
   ]
 
   return (
+    if (!authed) return (
+  <div style={{minHeight:'100vh',display:'flex',alignItems:'center',justifyContent:'center',background:'linear-gradient(135deg,#f0faf9,#fef9f0)',fontFamily:"'Hiragino Sans','Yu Gothic',sans-serif"}}>
+    <div style={{background:'white',borderRadius:16,padding:'40px 32px',boxShadow:'0 2px 16px rgba(26,122,110,0.10)',width:320,textAlign:'center'}}>
+      <div style={{width:8,height:40,background:'#1A7A6E',borderRadius:2,margin:'0 auto 20px'}}></div>
+      <h2 style={{color:'#1E2D2B',fontSize:18,fontWeight:700,marginBottom:6}}>フィードバックシート生成</h2>
+      <p style={{color:'#6B7B79',fontSize:13,marginBottom:24}}>パスワードを入力してください</p>
+      <input type="password" value={pwInput} onChange={e=>setPwInput(e.target.value)} onKeyDown={e=>e.key==='Enter'&&(pwInput===SITE_PASSWORD?setAuthed(true):alert('パスワードが違います'))} placeholder="パスワード" style={{width:'100%',padding:'12px 14px',border:'1.5px solid #A8D5CE',borderRadius:10,fontSize:15,marginBottom:12,boxSizing:'border-box',outline:'none'}} />
+      <button onClick={()=>pwInput===SITE_PASSWORD?setAuthed(true):alert('パスワードが違います')} style={{width:'100%',padding:'13px',background:'#1A7A6E',color:'white',border:'none',borderRadius:10,fontSize:15,fontWeight:700,cursor:'pointer'}}>ログイン</button>
+    </div>
+  </div>
+)
     <div style={styles.root}>
       {/* Header */}
       <div style={styles.header}>
