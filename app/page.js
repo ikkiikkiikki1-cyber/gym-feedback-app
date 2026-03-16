@@ -19,8 +19,32 @@ export default function Home() {
   const [error, setError] = useState('')
   const [resultHtml, setResultHtml] = useState(null)
   const [remaining, setRemaining] = useState(null)
+  const [sending, setSending] = useState(false)
+  const [sendResult, setSendResult] = useState('')
   const fileRef = useRef(null)
   const cameraRef = useRef(null)
+
+  const handleSendEmail = async () => {
+    setSending(true)
+    setSendResult('')
+    try {
+      const res = await fetch('/api/sendmail', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storeName, customerName, html: resultHtml }),
+      })
+      const data = await res.json()
+      if (!res.ok || data.error) {
+        setSendResult('❌ 送信失敗: ' + data.error)
+      } else {
+        setSendResult('✅ メールを送信しました！')
+      }
+    } catch (e) {
+      setSendResult('❌ 通信エラー: ' + e.message)
+    } finally {
+      setSending(false)
+    }
+  }
 
   const handleLogin = () => {
     if (pwInput === SITE_PASSWORD) {
@@ -187,8 +211,14 @@ export default function Home() {
               </div>
               <div style={styles.resultActions}>
                 <button onClick={openPrint} style={styles.printBtn}>🖨️ 印刷する</button>
+                <button onClick={handleSendEmail} disabled={sending} style={{ ...styles.mailBtn, opacity: sending ? 0.7 : 1 }}>
+                  {sending ? '送信中...' : '📧 メール送信'}
+                </button>
               </div>
             </div>
+            {sendResult && (
+              <p style={{ textAlign: 'center', padding: '10px', fontSize: 13, color: sendResult.startsWith('✅') ? '#1A7A6E' : '#c0392b', background: sendResult.startsWith('✅') ? '#E8F5F3' : '#fff2f2', margin: 0 }}>{sendResult}</p>
+            )}
             <iframe srcDoc={resultHtml} style={styles.iframe} title="フィードバックシート" />
           </div>
         )}
@@ -236,5 +266,6 @@ const styles = {
   resultSub: { color: '#6B7B79', fontSize: 13 },
   resultActions: { display: 'flex', gap: 10 },
   printBtn: { padding: '10px 20px', background: GOLD, color: 'white', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer' },
+  mailBtn: { padding: '10px 20px', background: '#1A7A6E', color: 'white', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer' },
   iframe: { width: '100%', height: 800, border: 'none', display: 'block' },
 }
